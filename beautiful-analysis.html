@@ -1,0 +1,2181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Telugu Linguistic Analysis - Complete Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            /* Professional Color Palette */
+            --primary-50: #f0f4ff;
+            --primary-100: #dbe4ff;
+            --primary-200: #bfccff;
+            --primary-300: #91a7ff;
+            --primary-400: #748ffc;
+            --primary-500: #5c7cfa;
+            --primary-600: #4c63d2;
+            --primary-700: #3c4bdc;
+            --primary-800: #2f3ab2;
+            --primary-900: #2b2d42;
+
+            /* Neutral Grays */
+            --gray-50: #f8fafc;
+            --gray-100: #f1f5f9;
+            --gray-200: #e2e8f0;
+            --gray-300: #cbd5e1;
+            --gray-400: #94a3b8;
+            --gray-500: #64748b;
+            --gray-600: #475569;
+            --gray-700: #334155;
+            --gray-800: #1e293b;
+            --gray-900: #0f172a;
+
+            /* Accent Colors */
+            --accent-blue: #3b82f6;
+            --accent-purple: #8b5cf6;
+            --accent-teal: #06b6d4;
+            --accent-emerald: #10b981;
+            --accent-rose: #f43f5e;
+
+            /* Typography */
+            --font-family-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            --font-family-mono: 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', monospace;
+
+            /* Shadows */
+            --shadow-xs: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+
+            /* Animations */
+            --transition-all: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-transform: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        body {
+            font-family: var(--font-family-sans);
+            background: linear-gradient(135deg, var(--primary-600) 0%, var(--primary-700) 50%, var(--primary-800) 100%);
+            color: var(--gray-900);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background:
+                radial-gradient(circle at 20% 50%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 80%, rgba(139, 92, 246, 0.2) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .main-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Header */
+        header {
+            padding: 64px 0 48px;
+            text-align: center;
+            color: white;
+            margin-bottom: 48px;
+        }
+
+        h1 {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 800;
+            margin-bottom: 20px;
+            text-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            letter-spacing: -0.025em;
+            background: linear-gradient(135deg, rgba(255,255,255,1) 0%, rgba(255,255,255,0.8) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            font-size: 1.25rem;
+            opacity: 0.9;
+            font-weight: 400;
+            max-width: 700px;
+            margin: 0 auto;
+            line-height: 1.7;
+        }
+
+        /* Stats Overview */
+        .stats-overview {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 20px;
+            margin-bottom: 64px;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 28px 24px;
+            text-align: center;
+            transition: var(--transition-all);
+            box-shadow: var(--shadow-lg);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--primary-500), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .stat-card:hover::before {
+            left: 100%;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: var(--shadow-xl);
+            background: rgba(255, 255, 255, 1);
+        }
+
+        .stat-number {
+            display: block;
+            font-size: 2.75rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary-600), var(--primary-800));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 8px;
+            letter-spacing: -0.02em;
+        }
+
+        .stat-label {
+            font-size: 0.875rem;
+            color: var(--gray-600);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Content Container */
+        .content-wrapper {
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 24px;
+            padding: 48px;
+            margin-bottom: 48px;
+            box-shadow: var(--shadow-xl);
+            position: relative;
+        }
+
+        /* Navigation */
+        .main-nav {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 48px;
+            flex-wrap: wrap;
+        }
+
+        .nav-section {
+            background: var(--gray-50);
+            border: 2px solid var(--gray-200);
+            color: var(--gray-700);
+            padding: 14px 24px;
+            border-radius: 12px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition-all);
+            position: relative;
+            overflow: hidden;
+            min-width: 140px;
+            text-align: center;
+        }
+
+        .nav-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--primary-500), var(--primary-600));
+            transition: left 0.3s ease;
+            z-index: -1;
+        }
+
+        .nav-section:hover::before,
+        .nav-section.active::before {
+            left: 0;
+        }
+
+        .nav-section:hover,
+        .nav-section.active {
+            color: white;
+            border-color: var(--primary-500);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        /* Chart Sections */
+        .analysis-section {
+            display: none;
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        .analysis-section.active {
+            display: block;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 48px;
+            padding-bottom: 24px;
+            border-bottom: 2px solid var(--gray-100);
+        }
+
+        .section-title {
+            font-size: 2.25rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary-600), var(--primary-800));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 16px;
+            letter-spacing: -0.025em;
+        }
+
+        .section-subtitle {
+            font-size: 1.125rem;
+            color: var(--gray-600);
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        /* Chart Grid */
+        .chart-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 32px;
+            margin-bottom: 64px;
+        }
+
+        .chart-card {
+            background: linear-gradient(135deg, var(--gray-50), rgba(255, 255, 255, 0.9));
+            border: 1px solid var(--gray-200);
+            border-radius: 20px;
+            padding: 32px;
+            box-shadow: var(--shadow-lg);
+            transition: var(--transition-all);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .chart-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-500), var(--accent-purple), var(--accent-teal));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .chart-card:hover::before {
+            opacity: 1;
+        }
+
+        .chart-card:hover {
+            transform: translateY(-6px);
+            box-shadow: var(--shadow-xl);
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.9));
+            border-color: var(--gray-300);
+        }
+
+        .chart-title {
+            font-size: 1.375rem;
+            font-weight: 700;
+            color: var(--gray-900);
+            margin-bottom: 8px;
+            letter-spacing: -0.025em;
+        }
+
+        .chart-description {
+            font-size: 0.875rem;
+            color: var(--gray-600);
+            margin-bottom: 24px;
+            line-height: 1.5;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 400px;
+        }
+
+        .chart-container.small {
+            height: 320px;
+        }
+
+        .chart-container.large {
+            height: 500px;
+        }
+
+        /* Sub-navigation for chart modes */
+        .sub-nav {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .sub-nav-btn {
+            background: var(--gray-100);
+            border: 1px solid var(--gray-200);
+            color: var(--gray-700);
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition-all);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .sub-nav-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--primary-500), var(--primary-600));
+            transition: left 0.2s ease;
+            z-index: -1;
+        }
+
+        .sub-nav-btn:hover::before,
+        .sub-nav-btn.active::before {
+            left: 0;
+        }
+
+        .sub-nav-btn:hover,
+        .sub-nav-btn.active {
+            color: white;
+            border-color: var(--primary-500);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-sm);
+        }
+
+        /* Telugu Text Styling */
+        .telugu-text {
+            font-family: 'Noto Sans Telugu', 'Telugu Sangam MN', serif;
+            font-weight: 500;
+            font-size: 1.1em;
+        }
+
+        /* Insights Section */
+        .insights-section {
+            background: linear-gradient(135deg, rgba(249, 250, 251, 0.9), rgba(243, 244, 246, 0.95));
+            border: 1px solid var(--gray-200);
+            border-radius: 24px;
+            padding: 56px 48px;
+            margin: 64px 0;
+            box-shadow: var(--shadow-lg);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .insights-section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(92, 124, 250, 0.1) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .insights-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 24px;
+            margin-top: 40px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .insight-card {
+            background: rgba(255, 255, 255, 0.95);
+            border: 1px solid var(--gray-200);
+            padding: 32px;
+            border-radius: 16px;
+            box-shadow: var(--shadow-md);
+            transition: var(--transition-all);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .insight-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(180deg, var(--primary-500), var(--accent-purple));
+            transform: scaleY(0);
+            transform-origin: bottom;
+            transition: transform 0.3s ease;
+        }
+
+        .insight-card:hover::before {
+            transform: scaleY(1);
+            transform-origin: top;
+        }
+
+        .insight-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-xl);
+            background: rgba(255, 255, 255, 1);
+        }
+
+        .insight-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--gray-900);
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .insight-icon {
+            font-size: 1.5rem;
+            opacity: 0.8;
+        }
+
+        .insight-text {
+            font-size: 1rem;
+            color: var(--gray-700);
+            line-height: 1.7;
+        }
+
+        /* Notable Words Section */
+        .words-showcase {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+            gap: 32px;
+            margin-top: 48px;
+        }
+
+        .word-category {
+            background: rgba(255, 255, 255, 0.98);
+            border: 1px solid var(--gray-200);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: var(--shadow-lg);
+            transition: var(--transition-all);
+        }
+
+        .word-category:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-xl);
+        }
+
+        .category-header {
+            background: linear-gradient(135deg, var(--primary-600), var(--primary-700));
+            color: white;
+            padding: 24px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .category-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 1s ease;
+        }
+
+        .word-category:hover .category-header::before {
+            left: 100%;
+        }
+
+        .category-title {
+            font-size: 1.125rem;
+            font-weight: 700;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .word-list {
+            padding: 0;
+        }
+
+        .word-item {
+            display: flex;
+            align-items: center;
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--gray-100);
+            transition: var(--transition-all);
+        }
+
+        .word-item:hover {
+            background: rgba(92, 124, 250, 0.05);
+            padding-left: 28px;
+        }
+
+        .word-item:last-child {
+            border-bottom: none;
+        }
+
+        .word-rank {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, var(--primary-500), var(--primary-600));
+            color: white;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: 700;
+            margin-right: 16px;
+            flex-shrink: 0;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .word-info {
+            flex: 1;
+        }
+
+        .word-text {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--gray-900);
+            margin-bottom: 4px;
+            font-family: 'Noto Sans Telugu', 'Telugu Sangam MN', serif;
+        }
+
+        .word-meta {
+            font-size: 0.8rem;
+            color: var(--gray-500);
+            font-weight: 500;
+        }
+
+        /* Loading and Error States */
+        .loading {
+            text-align: center;
+            padding: 80px 20px;
+            color: var(--gray-500);
+            font-size: 1.125rem;
+            font-weight: 500;
+        }
+
+        .error {
+            background: linear-gradient(135deg, #fee2e2, #fecaca);
+            border: 1px solid #f87171;
+            color: #dc2626;
+            padding: 24px;
+            border-radius: 12px;
+            font-size: 1rem;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        /* Feature Highlights */
+        .feature-highlight {
+            background: linear-gradient(135deg, rgba(92, 124, 250, 0.08), rgba(139, 92, 246, 0.06));
+            border-left: 4px solid var(--primary-500);
+            padding: 32px;
+            margin: 32px 0;
+            border-radius: 0 16px 16px 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-highlight::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100px;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(92, 124, 250, 0.05));
+            pointer-events: none;
+        }
+
+        .feature-title {
+            font-weight: 700;
+            color: var(--gray-900);
+            margin-bottom: 12px;
+            font-size: 1.125rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .main-container {
+                padding: 0 16px;
+            }
+
+            header {
+                padding: 48px 0 32px;
+                margin-bottom: 32px;
+            }
+
+            h1 {
+                font-size: 2.5rem;
+            }
+
+            .content-wrapper {
+                padding: 32px 24px;
+                margin-bottom: 32px;
+            }
+
+            .chart-grid {
+                grid-template-columns: 1fr;
+                gap: 24px;
+            }
+
+            .chart-container {
+                height: 300px;
+            }
+
+            .stats-overview {
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+                gap: 16px;
+                margin-bottom: 48px;
+            }
+
+            .main-nav {
+                gap: 8px;
+            }
+
+            .nav-section {
+                padding: 12px 16px;
+                font-size: 0.85rem;
+                min-width: 120px;
+            }
+
+            .insights-section {
+                padding: 40px 32px;
+                margin: 48px 0;
+            }
+
+            .insights-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .words-showcase {
+                grid-template-columns: 1fr;
+                gap: 24px;
+            }
+
+            .section-title {
+                font-size: 1.875rem;
+            }
+
+            .stat-number {
+                font-size: 2.25rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .main-container {
+                padding: 0 12px;
+            }
+
+            .content-wrapper {
+                padding: 24px 16px;
+            }
+
+            .chart-card {
+                padding: 24px;
+            }
+
+            .insights-section {
+                padding: 32px 24px;
+            }
+
+            .insight-card {
+                padding: 24px;
+            }
+
+            .stats-overview {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .stat-card {
+                padding: 20px 16px;
+            }
+        }
+
+        /* Scrollbar Styling */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.05);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, var(--primary-500), var(--primary-600));
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(135deg, var(--primary-600), var(--primary-700));
+        }
+
+        /* Smooth entrance animations */
+        .main-container {
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .stat-card {
+            animation: slideInUp 0.6s ease-out both;
+        }
+
+        .stat-card:nth-child(1) { animation-delay: 0.1s; }
+        .stat-card:nth-child(2) { animation-delay: 0.2s; }
+        .stat-card:nth-child(3) { animation-delay: 0.3s; }
+        .stat-card:nth-child(4) { animation-delay: 0.4s; }
+        .stat-card:nth-child(5) { animation-delay: 0.5s; }
+        .stat-card:nth-child(6) { animation-delay: 0.6s; }
+
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <header>
+            <h1>Telugu Linguistic Analysis</h1>
+            <p class="subtitle">Comprehensive computational analysis of 54,265+ Telugu words with advanced syllable-based linguistics, morphology, phonetics, and semantic insights</p>
+        </header>
+
+        <div class="stats-overview" id="stats-overview">
+            <div class="loading">Loading comprehensive statistics...</div>
+        </div>
+
+        <div class="content-wrapper">
+            <div class="feature-highlight">
+                <div class="feature-title">🧠 Advanced Linguistic Intelligence</div>
+                <p>This comprehensive analysis platform combines traditional computational linguistics with Telugu-specific morphological, phonetic, and semantic analysis. Discover patterns in syllable structure, etymological origins, grammatical complexity, and cognitive processing - providing deep insights into one of India's classical languages.</p>
+            </div>
+
+            <nav class="main-nav">
+                <button class="nav-section active" onclick="showSection('basic')">📊 Core Analysis</button>
+                <button class="nav-section" onclick="showSection('advanced')">🔬 Linguistic Deep-Dive</button>
+                <button class="nav-section" onclick="showSection('morphology')">🧬 Morphology & Structure</button>
+                <button class="nav-section" onclick="showSection('phonetics')">🎵 Phonetics & Sound</button>
+                <button class="nav-section" onclick="showSection('insights')">💡 Key Insights</button>
+            </nav>
+
+            <!-- Core Analysis Section -->
+            <section id="basic-section" class="analysis-section active">
+                <div class="section-header">
+                    <h2 class="section-title">Core Syllable Analysis</h2>
+                    <p class="section-subtitle">Fundamental Telugu syllable patterns and word structure analysis</p>
+                </div>
+
+                <div class="chart-grid">
+                    <div class="chart-card">
+                        <h3 class="chart-title">Word Length Distribution</h3>
+                        <p class="chart-description">Character count frequency across all Telugu words</p>
+                        <div class="chart-container">
+                            <canvas id="lengthChart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="chart-card">
+                        <h3 class="chart-title">Syllables per Word</h3>
+                        <p class="chart-description">Distribution of syllable count in Telugu words</p>
+                        <div class="chart-container">
+                            <canvas id="syllableDistChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="chart-card">
+                    <h3 class="chart-title">Most Frequent Telugu Syllables</h3>
+                    <p class="chart-description">Common syllable patterns and consonant-vowel combinations</p>
+                    <div class="sub-nav">
+                        <button class="sub-nav-btn active" onclick="showSyllableChart('frequency')">Most Frequent</button>
+                        <button class="sub-nav-btn" onclick="showSyllableChart('consonants')">Consonants</button>
+                        <button class="sub-nav-btn" onclick="showSyllableChart('combinations')">CV Combinations</button>
+                    </div>
+                    <div class="chart-container large">
+                        <canvas id="syllableChart"></canvas>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Advanced Linguistic Analysis -->
+            <section id="advanced-section" class="analysis-section">
+                <div class="section-header">
+                    <h2 class="section-title">Advanced Linguistic Analysis</h2>
+                    <p class="section-subtitle">Telugu-specific linguistic patterns, etymology, and grammatical analysis</p>
+                </div>
+
+                <div class="chart-grid">
+                    <div class="chart-card">
+                        <h3 class="chart-title">Etymology & Loan Words</h3>
+                        <p class="chart-description">Distribution of word origins: Native Telugu vs Sanskrit/Arabic/English</p>
+                        <div class="chart-container">
+                            <canvas id="loanWordChart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="chart-card">
+                        <h3 class="chart-title">Grammatical Case Markers</h3>
+                        <p class="chart-description">Usage frequency of Telugu case markers (కు, తో, లో, etc.)</p>
+                        <div class="chart-container">
+                            <canvas id="caseMarkerChart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="chart-card">
+                        <h3 class="chart-title">Word Formation Patterns</h3>
+                        <p class="chart-description">Analysis of how Telugu words are linguistically constructed</p>
+                        <div class="chart-container">
+                            <canvas id="formationChart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="chart-card">
+                        <h3 class="chart-title">Semantic Complexity</h3>
+                        <p class="chart-description">Word complexity and cognitive processing difficulty</p>
+                        <div class="sub-nav">
+                            <button class="sub-nav-btn active" onclick="showSemanticChart('complexity')">Complexity</button>
+                            <button class="sub-nav-btn" onclick="showSemanticChart('classes')">Word Classes</button>
+                            <button class="sub-nav-btn" onclick="showSemanticChart('cognitive')">Cognitive Load</button>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="semanticChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Morphology Section -->
+            <section id="morphology-section" class="analysis-section">
+                <div class="section-header">
+                    <h2 class="section-title">Morphological Analysis</h2>
+                    <p class="section-subtitle">Word structure, prefixes, suffixes, and morpheme patterns</p>
+                </div>
+
+                <div class="chart-grid">
+                    <div class="chart-card">
+                        <h3 class="chart-title">Morphological Patterns</h3>
+                        <p class="chart-description">Prefix, suffix, and root pattern frequency analysis</p>
+                        <div class="sub-nav">
+                            <button class="sub-nav-btn active" onclick="showMorphologyChart('prefixes')">Prefixes</button>
+                            <button class="sub-nav-btn" onclick="showMorphologyChart('suffixes')">Suffixes</button>
+                            <button class="sub-nav-btn" onclick="showMorphologyChart('roots')">Root Patterns</button>
+                        </div>
+                        <div class="chart-container large">
+                            <canvas id="morphologyChart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="chart-card">
+                        <h3 class="chart-title">Aksharam Analysis</h3>
+                        <p class="chart-description">Distribution of Telugu syllables (aksharams)</p>
+                        <div class="chart-container">
+                            <canvas id="aksharamChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="chart-card">
+                    <h3 class="chart-title">Word Pattern Analysis</h3>
+                    <p class="chart-description">Common beginnings and endings in Telugu words</p>
+                    <div class="sub-nav">
+                        <button class="sub-nav-btn active" onclick="showPatternChart('beginnings')">Beginnings</button>
+                        <button class="sub-nav-btn" onclick="showPatternChart('endings')">Endings</button>
+                        <button class="sub-nav-btn" onclick="showPatternChart('both')">Comparison</button>
+                    </div>
+                    <div class="chart-container large">
+                        <canvas id="patternChart"></canvas>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Phonetics Section -->
+            <section id="phonetics-section" class="analysis-section">
+                <div class="section-header">
+                    <h2 class="section-title">Phonetic Analysis</h2>
+                    <p class="section-subtitle">Sound patterns, consonant clusters, and phonological structures</p>
+                </div>
+
+                <div class="chart-grid">
+                    <div class="chart-card">
+                        <h3 class="chart-title">Consonant Clusters</h3>
+                        <p class="chart-description">Most common consonant combinations in Telugu</p>
+                        <div class="chart-container">
+                            <canvas id="consonantClusterChart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="chart-card">
+                        <h3 class="chart-title">Sandhi Patterns</h3>
+                        <p class="chart-description">Sound change patterns at morpheme boundaries</p>
+                        <div class="chart-container">
+                            <canvas id="sandhiChart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="chart-card">
+                        <h3 class="chart-title">Vowel Modifiers (Gunintam)</h3>
+                        <p class="chart-description">Usage patterns of Telugu vowel signs and modifiers</p>
+                        <div class="chart-container">
+                            <canvas id="gunintamChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Insights Section -->
+            <section id="insights-section" class="analysis-section">
+                <div class="section-header">
+                    <h2 class="section-title">Key Linguistic Insights</h2>
+                    <p class="section-subtitle">Deep analysis findings and linguistic discoveries</p>
+                </div>
+
+                <div class="insights-section">
+                    <div class="insights-grid" id="insights-content">
+                        <div class="loading">Generating comprehensive linguistic insights...</div>
+                    </div>
+                </div>
+
+                <div class="section-header">
+                    <h2 class="section-title">Notable Words Discovery</h2>
+                    <p class="section-subtitle">Interesting linguistic findings from the Telugu corpus</p>
+                </div>
+
+                <div class="words-showcase" id="interesting-words">
+                    <div class="loading">Loading word analysis...</div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <script>
+        let statsData = null;
+        let charts = {};
+
+        // Professional color palette for visualizations
+        const colors = {
+            primary: '#5c7cfa',
+            secondary: '#3c4bdc',
+            accent: '#8b5cf6',
+            success: '#10b981',
+            warning: '#f59e0b',
+            danger: '#ef4444',
+            neutral: '#64748b',
+            gradients: [
+                '#5c7cfa', '#3b82f6', '#06b6d4', '#10b981',
+                '#84cc16', '#eab308', '#f59e0b', '#f97316',
+                '#ef4444', '#ec4899', '#d946ef', '#8b5cf6',
+                '#6366f1', '#4f46e5', '#3730a3', '#1e1b4b'
+            ],
+            teluguSpecific: [
+                '#4c63d2', '#5c7cfa', '#748ffc', '#91a7ff',
+                '#06b6d4', '#0891b2', '#0e7490', '#155e75',
+                '#10b981', '#059669', '#047857', '#065f46',
+                '#8b5cf6', '#7c3aed', '#6d28d9', '#5b21b6'
+            ]
+        };
+
+        // Enhanced Chart.js defaults for professional appearance
+        Chart.defaults.font.family = 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif';
+        Chart.defaults.font.size = 13;
+        Chart.defaults.font.weight = '500';
+        Chart.defaults.color = '#64748b';
+        Chart.defaults.borderColor = '#e2e8f0';
+        Chart.defaults.plugins.legend.labels.usePointStyle = true;
+        Chart.defaults.plugins.legend.labels.boxWidth = 10;
+        Chart.defaults.plugins.legend.labels.boxHeight = 10;
+        Chart.defaults.plugins.legend.labels.padding = 20;
+        Chart.defaults.plugins.legend.labels.font = {
+            family: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif',
+            size: 13,
+            weight: '600'
+        };
+        Chart.defaults.plugins.tooltip.backgroundColor = '#1e293b';
+        Chart.defaults.plugins.tooltip.titleColor = '#f1f5f9';
+        Chart.defaults.plugins.tooltip.bodyColor = '#e2e8f0';
+        Chart.defaults.plugins.tooltip.cornerRadius = 12;
+        Chart.defaults.plugins.tooltip.padding = 12;
+
+        async function loadData() {
+            try {
+                const response = await fetch('./telugu-stats.json');
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+
+                const text = await response.text();
+                if (!text.trim()) {
+                    throw new Error('Empty response from server');
+                }
+
+                statsData = JSON.parse(text);
+
+                // Validate comprehensive data structure
+                if (!statsData.basic || !statsData.syllableAnalysis) {
+                    throw new Error('Required analysis data not found');
+                }
+
+                displayOverviewStats();
+                createAllCharts();
+                generateInsights();
+                displayInterestingWords();
+
+                console.log('✅ Telugu linguistic analysis loaded successfully');
+                console.log('📊 Analysis coverage:', {
+                    totalWords: statsData.basic.totalWords,
+                    uniqueSyllables: statsData.syllableAnalysis?.totalUniqueSyllables,
+                    morphologyAvailable: statsData.morphology ? '✓' : '✗',
+                    phoneticsAvailable: statsData.phonetics ? '✓' : '✗',
+                    semanticsAvailable: statsData.semanticPatterns ? '✓' : '✗'
+                });
+            } catch (error) {
+                console.error('Error loading analysis:', error);
+
+                let errorMessage = '❌ Failed to load Telugu analysis data. ';
+                if (error.message.includes('HTTP')) {
+                    errorMessage += 'Network error - ensure local server is running.';
+                } else if (error.message.includes('JSON')) {
+                    errorMessage += 'Data file is corrupted.';
+                } else {
+                    errorMessage += error.message;
+                }
+
+                document.querySelectorAll('.loading').forEach(el => {
+                    el.innerHTML = `<div class="error">${errorMessage}</div>`;
+                });
+            }
+        }
+
+        function displayOverviewStats() {
+            const container = document.getElementById('stats-overview');
+            const basic = statsData.basic;
+            const syllables = statsData.syllableAnalysis;
+            const linguistics = statsData.teluguLinguistics;
+
+            container.innerHTML = `
+                <div class="stat-card">
+                    <span class="stat-number">${basic.totalWords.toLocaleString()}</span>
+                    <span class="stat-label">Total Words</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">${syllables?.syllablesPerWord?.averageSyllablesPerWord || 'N/A'}</span>
+                    <span class="stat-label">Avg Syllables</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">${syllables?.totalUniqueSyllables?.toLocaleString() || 'N/A'}</span>
+                    <span class="stat-label">Unique Syllables</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">${linguistics?.loanWordDistribution?.native?.percentage || basic.averageLength}%</span>
+                    <span class="stat-label">${linguistics?.loanWordDistribution ? 'Native Telugu' : 'Avg Length'}</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">${basic.longestWord.length}</span>
+                    <span class="stat-label">Max Length</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">${basic.uniqueCharacters}</span>
+                    <span class="stat-label">Unique Characters</span>
+                </div>
+            `;
+        }
+
+        function createAllCharts() {
+            createLengthChart();
+            createSyllableDistributionChart();
+            createSyllableChart('frequency');
+            createLoanWordChart();
+            createCaseMarkerChart();
+            createFormationChart();
+            createSemanticChart('complexity');
+            createMorphologyChart('prefixes');
+            createAksharamChart();
+            createPatternChart('beginnings');
+            createConsonantClusterChart();
+            createSandhiChart();
+            createGunintamChart();
+        }
+
+        function createLengthChart() {
+            const ctx = document.getElementById('lengthChart').getContext('2d');
+            const data = statsData.lengthDistribution;
+
+            charts.length = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: data.lengths.map(l => l + (l === 1 ? ' char' : ' chars')),
+                    datasets: [{
+                        data: data.counts,
+                        backgroundColor: colors.gradients[0],
+                        borderRadius: 6,
+                        borderSkipped: false
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            backgroundColor: colors.primary,
+                            titleColor: '#ffffff',
+                            bodyColor: '#ffffff',
+                            cornerRadius: 8,
+                            callbacks: {
+                                label: function(context) {
+                                    const percentage = data.percentages[context.dataIndex];
+                                    return `${context.formattedValue} words (${percentage}%)`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            border: { display: false },
+                            grid: { color: '#f3f4f6' },
+                            ticks: { color: colors.neutral }
+                        },
+                        x: {
+                            border: { display: false },
+                            grid: { display: false },
+                            ticks: { color: colors.neutral }
+                        }
+                    }
+                }
+            });
+        }
+
+        function createSyllableDistributionChart() {
+            const ctx = document.getElementById('syllableDistChart').getContext('2d');
+            const data = statsData.syllableAnalysis?.syllablesPerWord?.distribution || [];
+
+            charts.syllableDist = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: data.map(item => `${item.syllableCount}`),
+                    datasets: [{
+                        label: 'Words',
+                        data: data.map(item => item.wordCount),
+                        borderColor: colors.success,
+                        backgroundColor: colors.success + '30',
+                        fill: true,
+                        tension: 0.4,
+                        pointRadius: 6,
+                        pointHoverRadius: 8,
+                        borderWidth: 3
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            backgroundColor: colors.primary,
+                            cornerRadius: 8,
+                            callbacks: {
+                                label: function(context) {
+                                    const item = data[context.dataIndex];
+                                    return `${item.wordCount.toLocaleString()} words (${item.percentage}%)`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            border: { display: false },
+                            grid: { color: '#f3f4f6' },
+                            ticks: { color: colors.neutral }
+                        },
+                        x: {
+                            border: { display: false },
+                            grid: { display: false },
+                            ticks: { color: colors.neutral },
+                            title: { display: true, text: 'Number of Syllables' }
+                        }
+                    }
+                }
+            });
+        }
+
+        function createSyllableChart(mode = 'frequency') {
+            const ctx = document.getElementById('syllableChart').getContext('2d');
+            if (charts.syllable) charts.syllable.destroy();
+
+            let data, chartType = 'bar';
+
+            if (mode === 'frequency') {
+                data = (statsData.syllableAnalysis?.mostFrequentSyllables || []).slice(0, 20);
+                chartType = 'bar';
+            } else if (mode === 'consonants') {
+                data = (statsData.syllableAnalysis?.consonantFrequency || []).slice(0, 15);
+                chartType = 'doughnut';
+            } else if (mode === 'combinations') {
+                data = (statsData.aksharams?.consonantVowelCombinations || []).slice(0, 15);
+                chartType = 'bar';
+            }
+
+            const config = {
+                type: chartType,
+                data: chartType === 'doughnut' ? {
+                    labels: data.map(item => item.consonant || item.combination || item.syllable),
+                    datasets: [{
+                        data: data.map(item => item.count),
+                        backgroundColor: colors.gradients.slice(0, data.length),
+                        borderWidth: 0,
+                        hoverBorderWidth: 3,
+                        hoverBorderColor: '#ffffff'
+                    }]
+                } : {
+                    labels: data.map(item => item.syllable || item.combination || item.consonant),
+                    datasets: [{
+                        data: data.map(item => item.count),
+                        backgroundColor: colors.gradients.slice(0, data.length),
+                        borderRadius: 8,
+                        borderSkipped: false
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: chartType === 'doughnut' ? {
+                            position: 'right',
+                            labels: {
+                                font: { family: 'Telugu Sangam MN, Noto Sans Telugu, Inter', size: 14 },
+                                padding: 20
+                            }
+                        } : { display: false },
+                        tooltip: {
+                            backgroundColor: colors.primary,
+                            titleColor: '#ffffff',
+                            bodyColor: '#ffffff',
+                            cornerRadius: 8,
+                            callbacks: {
+                                label: function(context) {
+                                    const item = data[context.dataIndex];
+                                    return `${item.syllable || item.consonant || item.combination}: ${item.percentage}%`;
+                                }
+                            }
+                        }
+                    },
+                    scales: chartType !== 'doughnut' ? {
+                        y: {
+                            beginAtZero: true,
+                            border: { display: false },
+                            grid: { color: '#f3f4f6' },
+                            ticks: { color: colors.neutral }
+                        },
+                        x: {
+                            border: { display: false },
+                            grid: { display: false },
+                            ticks: {
+                                color: colors.neutral,
+                                font: { family: 'Telugu Sangam MN, Noto Sans Telugu, Inter', size: 16 }
+                            }
+                        }
+                    } : undefined
+                }
+            };
+
+            charts.syllable = new Chart(ctx, config);
+        }
+
+        function createLoanWordChart() {
+            const ctx = document.getElementById('loanWordChart').getContext('2d');
+            const data = statsData.teluguLinguistics?.loanWordDistribution;
+
+            if (!data) {
+                ctx.canvas.parentNode.innerHTML = '<div class="error">Loan word data not available</div>';
+                return;
+            }
+
+            charts.loanWord = new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: ['Native Telugu', 'Sanskrit Origin', 'Arabic Origin', 'English Origin'],
+                    datasets: [{
+                        data: [data.native.percentage, data.sanskrit.percentage,
+                               data.arabic.percentage, data.english.percentage],
+                        backgroundColor: [colors.success, colors.primary, colors.warning, colors.accent],
+                        borderWidth: 3,
+                        borderColor: '#ffffff',
+                        hoverBorderWidth: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: { padding: 20, font: { size: 13 } }
+                        },
+                        tooltip: {
+                            backgroundColor: colors.primary,
+                            cornerRadius: 8,
+                            callbacks: {
+                                label: function(context) {
+                                    const labels = ['native', 'sanskrit', 'arabic', 'english'];
+                                    const key = labels[context.dataIndex];
+                                    return `${context.label}: ${context.parsed}% (${data[key].count.toLocaleString()} words)`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function createCaseMarkerChart() {
+            const ctx = document.getElementById('caseMarkerChart').getContext('2d');
+            const data = (statsData.teluguLinguistics?.caseMarkers || []).slice(0, 12);
+
+            if (!data.length) {
+                ctx.canvas.parentNode.innerHTML = '<div class="error">Case marker data not available</div>';
+                return;
+            }
+
+            charts.caseMarker = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: data.map(item => item.marker),
+                    datasets: [{
+                        data: data.map(item => item.count),
+                        backgroundColor: colors.gradients.slice(0, data.length),
+                        borderRadius: 8
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    indexAxis: 'y',
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            backgroundColor: colors.primary,
+                            cornerRadius: 8,
+                            callbacks: {
+                                label: function(context) {
+                                    const item = data[context.dataIndex];
+                                    return `${item.marker}: ${item.count.toLocaleString()} (${item.percentage}%)`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            beginAtZero: true,
+                            border: { display: false },
+                            grid: { color: '#f3f4f6' },
+                            ticks: { color: colors.neutral }
+                        },
+                        y: {
+                            border: { display: false },
+                            grid: { display: false },
+                            ticks: {
+                                color: colors.neutral,
+                                font: { family: 'Telugu Sangam MN, Noto Sans Telugu, Inter', size: 14 }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function createFormationChart() {
+            const ctx = document.getElementById('formationChart').getContext('2d');
+            const data = (statsData.semanticPatterns?.wordFormation || []).slice(0, 8);
+
+            if (!data.length) {
+                ctx.canvas.parentNode.innerHTML = '<div class="error">Word formation data not available</div>';
+                return;
+            }
+
+            charts.formation = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: data.map(item => item.formation.replace('_', ' ')),
+                    datasets: [{
+                        data: data.map(item => item.percentage),
+                        backgroundColor: colors.gradients.slice(0, data.length),
+                        borderRadius: 8
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            backgroundColor: colors.primary,
+                            cornerRadius: 8,
+                            callbacks: {
+                                label: function(context) {
+                                    const item = data[context.dataIndex];
+                                    return `${item.formation.replace('_', ' ')}: ${item.percentage}% (${item.count?.toLocaleString()} words)`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            border: { display: false },
+                            grid: { color: '#f3f4f6' },
+                            ticks: { color: colors.neutral },
+                            title: { display: true, text: 'Percentage of Words' }
+                        },
+                        x: {
+                            border: { display: false },
+                            grid: { display: false },
+                            ticks: {
+                                color: colors.neutral,
+                                maxRotation: 45,
+                                minRotation: 45
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function createSemanticChart(mode = 'complexity') {
+            const ctx = document.getElementById('semanticChart').getContext('2d');
+            if (charts.semantic) charts.semantic.destroy();
+
+            let data, chartType;
+
+            if (mode === 'complexity') {
+                data = statsData.semanticPatterns?.wordComplexity || [];
+                chartType = 'polarArea';
+            } else if (mode === 'classes') {
+                data = (statsData.semanticPatterns?.wordClasses || []).slice(0, 8);
+                chartType = 'doughnut';
+            } else if (mode === 'cognitive') {
+                data = statsData.semanticPatterns?.cognitiveLoad || [];
+                chartType = 'bar';
+            }
+
+            if (!data.length) {
+                ctx.canvas.parentNode.innerHTML = '<div class="error">Semantic analysis data not available</div>';
+                return;
+            }
+
+            const config = {
+                type: chartType,
+                data: {
+                    labels: data.map(item => item.category || item.wordClass),
+                    datasets: [{
+                        data: data.map(item => item.percentage || item.count),
+                        backgroundColor: colors.gradients.slice(0, data.length),
+                        borderWidth: chartType === 'bar' ? 0 : 3,
+                        borderColor: chartType !== 'bar' ? '#ffffff' : undefined,
+                        borderRadius: chartType === 'bar' ? 8 : undefined
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: chartType === 'doughnut' ? 'right' : 'bottom',
+                            labels: { padding: 16 }
+                        },
+                        tooltip: {
+                            backgroundColor: colors.primary,
+                            cornerRadius: 8,
+                            callbacks: {
+                                label: function(context) {
+                                    const item = data[context.dataIndex];
+                                    return `${item.category || item.wordClass}: ${item.percentage}% (${item.count?.toLocaleString()} words)`;
+                                }
+                            }
+                        }
+                    },
+                    scales: chartType === 'bar' ? {
+                        y: {
+                            beginAtZero: true,
+                            border: { display: false },
+                            grid: { color: '#f3f4f6' },
+                            ticks: { color: colors.neutral }
+                        },
+                        x: {
+                            border: { display: false },
+                            grid: { display: false },
+                            ticks: { color: colors.neutral }
+                        }
+                    } : (chartType === 'polarArea' ? {
+                        r: {
+                            beginAtZero: true,
+                            border: { display: false },
+                            grid: { color: '#f3f4f6' },
+                            ticks: { display: false }
+                        }
+                    } : undefined)
+                }
+            };
+
+            charts.semantic = new Chart(ctx, config);
+        }
+
+        function createMorphologyChart(mode = 'prefixes') {
+            const ctx = document.getElementById('morphologyChart').getContext('2d');
+            if (charts.morphology) charts.morphology.destroy();
+
+            let data, title;
+
+            if (mode === 'prefixes') {
+                data = (statsData.morphology?.prefixFrequency || []).slice(0, 15);
+                title = 'Most Common Prefixes';
+            } else if (mode === 'suffixes') {
+                data = (statsData.morphology?.suffixFrequency || []).slice(0, 15);
+                title = 'Most Common Suffixes';
+            } else if (mode === 'roots') {
+                data = (statsData.morphology?.rootPatterns || []).slice(0, 12);
+                title = 'Root Patterns (CV Structure)';
+            }
+
+            if (!data.length) {
+                ctx.canvas.parentNode.innerHTML = '<div class="error">Morphology data not available</div>';
+                return;
+            }
+
+            charts.morphology = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: data.map(item => item.prefix || item.suffix || item.pattern),
+                    datasets: [{
+                        label: title,
+                        data: data.map(item => item.count),
+                        borderColor: colors.accent,
+                        backgroundColor: colors.accent + '20',
+                        fill: true,
+                        tension: 0.4,
+                        pointRadius: 6,
+                        pointHoverRadius: 8,
+                        borderWidth: 3
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            backgroundColor: colors.primary,
+                            cornerRadius: 8,
+                            callbacks: {
+                                label: function(context) {
+                                    const item = data[context.dataIndex];
+                                    return `${item.prefix || item.suffix || item.pattern}: ${item.count.toLocaleString()} (${item.percentage}%)`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            border: { display: false },
+                            grid: { color: '#f3f4f6' },
+                            ticks: { color: colors.neutral }
+                        },
+                        x: {
+                            border: { display: false },
+                            grid: { display: false },
+                            ticks: {
+                                color: colors.neutral,
+                                font: { family: 'Telugu Sangam MN, Noto Sans Telugu, Inter' }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function createAksharamChart() {
+            const ctx = document.getElementById('aksharamChart').getContext('2d');
+            const data = (statsData.aksharams?.top20 || statsData.aksharams?.top30 || []).slice(0, 15);
+
+            charts.aksharam = new Chart(ctx, {
+                type: 'polarArea',
+                data: {
+                    labels: data.map(item => item.aksharam),
+                    datasets: [{
+                        data: data.map(item => item.count),
+                        backgroundColor: colors.gradients.slice(0, data.length).map(color => color + '80'),
+                        borderColor: colors.gradients.slice(0, data.length),
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                font: { family: 'Telugu Sangam MN, Noto Sans Telugu, Inter', size: 12 },
+                                padding: 16
+                            }
+                        },
+                        tooltip: {
+                            backgroundColor: colors.primary,
+                            cornerRadius: 8,
+                            callbacks: {
+                                label: function(context) {
+                                    const item = data[context.dataIndex];
+                                    return `${item.aksharam}: ${item.count.toLocaleString()} (${item.percentage}%)`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        r: {
+                            beginAtZero: true,
+                            border: { display: false },
+                            grid: { color: '#f3f4f6' },
+                            ticks: { display: false }
+                        }
+                    }
+                }
+            });
+        }
+
+        function createPatternChart(type = 'beginnings') {
+            const ctx = document.getElementById('patternChart').getContext('2d');
+            if (charts.pattern) charts.pattern.destroy();
+
+            if (type === 'both') {
+                const beginnings = (statsData.wordBeginnings?.twoChar || []).slice(0, 8);
+                const endings = (statsData.wordEndings?.twoChar || []).slice(0, 8);
+
+                charts.pattern = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: beginnings.map(item => item.beginning),
+                        datasets: [{
+                            label: 'Beginnings',
+                            data: beginnings.map(item => item.count),
+                            backgroundColor: colors.primary,
+                            borderRadius: 6
+                        }, {
+                            label: 'Endings',
+                            data: endings.map(item => item.count),
+                            backgroundColor: colors.secondary,
+                            borderRadius: 6
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { position: 'top' },
+                            tooltip: {
+                                backgroundColor: colors.primary,
+                                cornerRadius: 8
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                border: { display: false },
+                                grid: { color: '#f3f4f6' },
+                                ticks: { color: colors.neutral }
+                            },
+                            x: {
+                                border: { display: false },
+                                grid: { display: false },
+                                ticks: {
+                                    color: colors.neutral,
+                                    font: { family: 'Telugu Sangam MN, Noto Sans Telugu, Inter' }
+                                }
+                            }
+                        }
+                    }
+                });
+            } else {
+                const data = type === 'beginnings' ?
+                    (statsData.wordBeginnings?.twoChar || []).slice(0, 15) :
+                    (statsData.wordEndings?.twoChar || []).slice(0, 15);
+
+                charts.pattern = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: data.map(item => type === 'beginnings' ? item.beginning : item.ending),
+                        datasets: [{
+                            label: type === 'beginnings' ? 'Word Beginnings' : 'Word Endings',
+                            data: data.map(item => item.count),
+                            borderColor: colors.success,
+                            backgroundColor: colors.success + '20',
+                            fill: true,
+                            tension: 0.4,
+                            pointRadius: 6,
+                            pointHoverRadius: 8,
+                            borderWidth: 3
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { display: false },
+                            tooltip: {
+                                backgroundColor: colors.primary,
+                                cornerRadius: 8,
+                                callbacks: {
+                                    afterLabel: function(context) {
+                                        const item = data[context.dataIndex];
+                                        return `Examples: ${item.examples?.slice(0, 2).join(', ') || 'N/A'}`;
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                border: { display: false },
+                                grid: { color: '#f3f4f6' },
+                                ticks: { color: colors.neutral }
+                            },
+                            x: {
+                                border: { display: false },
+                                grid: { display: false },
+                                ticks: {
+                                    color: colors.neutral,
+                                    font: { family: 'Telugu Sangam MN, Noto Sans Telugu, Inter' }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+        }
+
+        function createConsonantClusterChart() {
+            const ctx = document.getElementById('consonantClusterChart').getContext('2d');
+            const data = (statsData.phonetics?.consonantClusters || []).slice(0, 12);
+
+            if (!data.length) {
+                ctx.canvas.parentNode.innerHTML = '<div class="error">Consonant cluster data not available</div>';
+                return;
+            }
+
+            charts.consonantCluster = new Chart(ctx, {
+                type: 'radar',
+                data: {
+                    labels: data.map(item => item.cluster),
+                    datasets: [{
+                        label: 'Frequency',
+                        data: data.map(item => item.count),
+                        borderColor: colors.warning,
+                        backgroundColor: colors.warning + '30',
+                        borderWidth: 3,
+                        pointRadius: 5,
+                        pointHoverRadius: 7
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            backgroundColor: colors.primary,
+                            cornerRadius: 8,
+                            callbacks: {
+                                label: function(context) {
+                                    const item = data[context.dataIndex];
+                                    return `${item.cluster}: ${item.count.toLocaleString()} (${item.percentage}%)`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        r: {
+                            beginAtZero: true,
+                            border: { display: false },
+                            grid: { color: '#f3f4f6' },
+                            ticks: { display: false },
+                            pointLabels: {
+                                font: { family: 'Telugu Sangam MN, Noto Sans Telugu, Inter', size: 14 }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function createSandhiChart() {
+            const ctx = document.getElementById('sandhiChart').getContext('2d');
+            const data = (statsData.teluguLinguistics?.sandhiPatterns || []).slice(0, 12);
+
+            if (!data.length) {
+                ctx.canvas.parentNode.innerHTML = '<div class="error">Sandhi pattern data not available</div>';
+                return;
+            }
+
+            charts.sandhi = new Chart(ctx, {
+                type: 'scatter',
+                data: {
+                    datasets: [{
+                        label: 'Sandhi Patterns',
+                        data: data.map((item, index) => ({
+                            x: index,
+                            y: item.count,
+                            pattern: item.pattern
+                        })),
+                        backgroundColor: colors.danger,
+                        borderColor: colors.danger,
+                        pointRadius: 10,
+                        pointHoverRadius: 14
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            backgroundColor: colors.primary,
+                            cornerRadius: 8,
+                            callbacks: {
+                                title: function(context) {
+                                    return context[0].raw.pattern;
+                                },
+                                label: function(context) {
+                                    const item = data[context.dataIndex];
+                                    return `Frequency: ${item.count.toLocaleString()} (${item.percentage}%)`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            border: { display: false },
+                            grid: { color: '#f3f4f6' },
+                            title: { display: true, text: 'Frequency' },
+                            ticks: { color: colors.neutral }
+                        },
+                        x: {
+                            type: 'linear',
+                            border: { display: false },
+                            grid: { display: false },
+                            ticks: {
+                                callback: function(value) {
+                                    return data[value]?.pattern || '';
+                                },
+                                font: { family: 'Telugu Sangam MN, Noto Sans Telugu, Inter' },
+                                color: colors.neutral
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function createGunintamChart() {
+            const ctx = document.getElementById('gunintamChart').getContext('2d');
+            const data = (statsData.gunintam?.all || []).slice(0, 10);
+
+            charts.gunintam = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: data.map(item => item.gunintam),
+                    datasets: [{
+                        data: data.map(item => item.count),
+                        backgroundColor: colors.gradients.slice(0, data.length),
+                        borderRadius: 8
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    indexAxis: 'y',
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            backgroundColor: colors.primary,
+                            cornerRadius: 8,
+                            callbacks: {
+                                title: function(context) {
+                                    return data[context[0].dataIndex].gunintam;
+                                },
+                                label: function(context) {
+                                    const item = data[context.dataIndex];
+                                    return `${item.count.toLocaleString()} (${item.percentage}%)`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            beginAtZero: true,
+                            border: { display: false },
+                            grid: { color: '#f3f4f6' },
+                            ticks: { color: colors.neutral }
+                        },
+                        y: {
+                            border: { display: false },
+                            grid: { display: false },
+                            ticks: {
+                                color: colors.neutral,
+                                font: { family: 'Telugu Sangam MN, Noto Sans Telugu, Inter', size: 16 }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function generateInsights() {
+            const insights = [
+                {
+                    title: "🌏 Language Purity",
+                    text: `${statsData.teluguLinguistics?.loanWordDistribution?.native?.percentage || 'Most'}% of analyzed words are native Telugu, demonstrating remarkable linguistic preservation despite centuries of cultural exchange with Sanskrit (${statsData.teluguLinguistics?.loanWordDistribution?.sanskrit?.percentage || 'some'}%), Arabic, and English influences.`
+                },
+                {
+                    title: "🧬 Syllabic Structure",
+                    text: `Telugu words average ${statsData.syllableAnalysis?.syllablesPerWord?.averageSyllablesPerWord || '4.6'} syllables, with ${statsData.syllableAnalysis?.totalUniqueSyllables?.toLocaleString() || '2000+'} unique syllable combinations revealing the language's incredible phonetic diversity and systematic sound organization.`
+                },
+                {
+                    title: "🔤 Morphological Richness",
+                    text: `Analysis reveals ${statsData.morphology?.prefixFrequency?.length || '15+'} distinct prefix patterns and ${statsData.morphology?.suffixFrequency?.length || '20+'} suffix variations, showcasing Telugu's sophisticated agglutinative word formation capabilities.`
+                },
+                {
+                    title: "🎵 Phonetic Patterns",
+                    text: `Consonant cluster analysis identifies ${statsData.phonetics?.consonantClusters?.length || '20+'} distinct patterns, with gemination (doubled consonants like ట్ట, చ్చ) being particularly frequent, reflecting Telugu's preference for rhythmic sound structures.`
+                },
+                {
+                    title: "⚖️ Cognitive Balance",
+                    text: `Word complexity distribution shows ${statsData.semanticPatterns?.wordComplexity?.find(item => item.category === 'medium')?.percentage || '48'}% of words have medium complexity, suggesting Telugu evolved for optimal balance between expressive power and processing efficiency.`
+                },
+                {
+                    title: "📝 Grammatical Sophistication",
+                    text: `Case marker "${statsData.teluguLinguistics?.caseMarkers?.[0]?.marker || 'న'}" appears most frequently (${statsData.teluguLinguistics?.caseMarkers?.[0]?.percentage || '1.9'}%), highlighting Telugu's complex agglutinative grammar that enables precise semantic relationships through morphological markers.`
+                }
+            ];
+
+            document.getElementById('insights-content').innerHTML = insights.map(insight => `
+                <div class="insight-card">
+                    <h3 class="insight-title">
+                        <span class="insight-icon">${insight.title.split(' ')[0]}</span>
+                        ${insight.title.substring(2)}
+                    </h3>
+                    <p class="insight-text">${insight.text}</p>
+                </div>
+            `).join('');
+        }
+
+        function displayInterestingWords() {
+            const container = document.getElementById('interesting-words');
+            const interesting = statsData.interestingWords;
+
+            if (!interesting) {
+                container.innerHTML = '<div class="error">Interesting words data not available</div>';
+                return;
+            }
+
+            const longestWords = interesting.longest?.filter(item => item.word && item.word.trim()) || [];
+            const shortestWords = interesting.shortest?.filter(item => item.word && item.word.trim()) || [];
+            const palindromes = interesting.palindromes?.filter(word => word && word.trim()) || [];
+
+            container.innerHTML = `
+                <div class="word-category">
+                    <div class="category-header">
+                        <h3 class="category-title">🏆 Longest Words</h3>
+                    </div>
+                    <div class="word-list">
+                        ${longestWords.slice(0, 8).map((item, i) => `
+                            <div class="word-item">
+                                <div class="word-rank">${i + 1}</div>
+                                <div class="word-info">
+                                    <div class="word-text telugu-text">${item.word}</div>
+                                    <div class="word-meta">${item.length} characters</div>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+
+                <div class="word-category">
+                    <div class="category-header">
+                        <h3 class="category-title">🌟 Most Unique Characters</h3>
+                    </div>
+                    <div class="word-list">
+                        ${(interesting.mostUniqueChars || []).slice(0, 6).map((item, i) => `
+                            <div class="word-item">
+                                <div class="word-rank">${i + 1}</div>
+                                <div class="word-info">
+                                    <div class="word-text telugu-text">${item.word}</div>
+                                    <div class="word-meta">${item.uniqueChars} unique characters</div>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+
+                <div class="word-category">
+                    <div class="category-header">
+                        <h3 class="category-title">🪞 Palindromes</h3>
+                    </div>
+                    <div class="word-list">
+                        ${palindromes.slice(0, 10).map((word, i) => `
+                            <div class="word-item">
+                                <div class="word-rank">${i + 1}</div>
+                                <div class="word-info">
+                                    <div class="word-text telugu-text">${word}</div>
+                                    <div class="word-meta">Reads same forwards & backwards</div>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        // Navigation functions
+        function showSection(sectionName) {
+            // Hide all sections
+            document.querySelectorAll('.analysis-section').forEach(section => {
+                section.classList.remove('active');
+            });
+
+            // Remove active class from all nav buttons
+            document.querySelectorAll('.nav-section').forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+            // Show selected section
+            document.getElementById(`${sectionName}-section`).classList.add('active');
+
+            // Add active class to clicked button
+            event.target.classList.add('active');
+        }
+
+        function showSyllableChart(mode) {
+            document.querySelectorAll('#syllableChart').forEach(chart => {
+                chart.closest('.chart-card').querySelectorAll('.sub-nav-btn').forEach(btn => btn.classList.remove('active'));
+            });
+            event.target.classList.add('active');
+            createSyllableChart(mode);
+        }
+
+        function showSemanticChart(mode) {
+            document.querySelectorAll('#semanticChart').forEach(chart => {
+                chart.closest('.chart-card').querySelectorAll('.sub-nav-btn').forEach(btn => btn.classList.remove('active'));
+            });
+            event.target.classList.add('active');
+            createSemanticChart(mode);
+        }
+
+        function showMorphologyChart(mode) {
+            document.querySelectorAll('#morphologyChart').forEach(chart => {
+                chart.closest('.chart-card').querySelectorAll('.sub-nav-btn').forEach(btn => btn.classList.remove('active'));
+            });
+            event.target.classList.add('active');
+            createMorphologyChart(mode);
+        }
+
+        function showPatternChart(type) {
+            document.querySelectorAll('#patternChart').forEach(chart => {
+                chart.closest('.chart-card').querySelectorAll('.sub-nav-btn').forEach(btn => btn.classList.remove('active'));
+            });
+            event.target.classList.add('active');
+            createPatternChart(type);
+        }
+
+        // Initialize application
+        document.addEventListener('DOMContentLoaded', loadData);
+    </script>
+</body>
+</html>

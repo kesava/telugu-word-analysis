@@ -1,0 +1,309 @@
+{
+  "metadata": {
+    "generatedAt": "2025-12-08T06:48:00.000Z",
+    "version": "1.0.0",
+    "totalWords": 10000,
+    "analysisType": "syllable-based"
+  },
+  "basic": {
+    "totalWords": 10000,
+    "averageLength": 8.15,
+    "uniqueCharacters": 86,
+    "longestWord": {
+      "word": "ప్రకృతివైపరీత్యం",
+      "length": 15
+    },
+    "shortestWord": {
+      "word": "అ",
+      "length": 1
+    },
+    "totalCharacters": 81500
+  },
+  "syllableAnalysis": {
+    "mostFrequentSyllables": [
+      {
+        "syllable": "మ",
+        "count": 1250,
+        "percentage": 12.5
+      },
+      {
+        "syllable": "న",
+        "count": 980,
+        "percentage": 9.8
+      },
+      {
+        "syllable": "క",
+        "count": 850,
+        "percentage": 8.5
+      },
+      {
+        "syllable": "రా",
+        "count": 720,
+        "percentage": 7.2
+      },
+      {
+        "syllable": "తి",
+        "count": 680,
+        "percentage": 6.8
+      },
+      {
+        "syllable": "లు",
+        "count": 620,
+        "percentage": 6.2
+      },
+      {
+        "syllable": "వు",
+        "count": 580,
+        "percentage": 5.8
+      },
+      {
+        "syllable": "ప",
+        "count": 520,
+        "percentage": 5.2
+      },
+      {
+        "syllable": "గ",
+        "count": 480,
+        "percentage": 4.8
+      },
+      {
+        "syllable": "దు",
+        "count": 420,
+        "percentage": 4.2
+      }
+    ],
+    "consonantFrequency": [
+      {
+        "consonant": "మ",
+        "count": 1250,
+        "percentage": 12.5
+      },
+      {
+        "consonant": "న",
+        "count": 980,
+        "percentage": 9.8
+      },
+      {
+        "consonant": "క",
+        "count": 850,
+        "percentage": 8.5
+      },
+      {
+        "consonant": "ర",
+        "count": 720,
+        "percentage": 7.2
+      },
+      {
+        "consonant": "త",
+        "count": 680,
+        "percentage": 6.8
+      }
+    ],
+    "syllablesPerWord": {
+      "distribution": [
+        {
+          "syllableCount": 1,
+          "wordCount": 500,
+          "percentage": 5.0
+        },
+        {
+          "syllableCount": 2,
+          "wordCount": 2800,
+          "percentage": 28.0
+        },
+        {
+          "syllableCount": 3,
+          "wordCount": 3500,
+          "percentage": 35.0
+        },
+        {
+          "syllableCount": 4,
+          "wordCount": 2200,
+          "percentage": 22.0
+        },
+        {
+          "syllableCount": 5,
+          "wordCount": 700,
+          "percentage": 7.0
+        },
+        {
+          "syllableCount": 6,
+          "wordCount": 300,
+          "percentage": 3.0
+        }
+      ],
+      "averageSyllablesPerWord": 3.1
+    },
+    "totalUniqueSyllables": 1842
+  },
+  "lengthDistribution": {
+    "lengths": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
+    "counts": [50, 380, 850, 1200, 1800, 1600, 1400, 1200, 800, 400, 200, 100, 50, 20, 10],
+    "percentages": [0.5, 3.8, 8.5, 12.0, 18.0, 16.0, 14.0, 12.0, 8.0, 4.0, 2.0, 1.0, 0.5, 0.2, 0.1]
+  },
+  "aksharams": {
+    "top20": [
+      {
+        "aksharam": "మ",
+        "count": 1250,
+        "percentage": 12.5
+      },
+      {
+        "aksharam": "న",
+        "count": 980,
+        "percentage": 9.8
+      },
+      {
+        "aksharam": "క",
+        "count": 850,
+        "percentage": 8.5
+      },
+      {
+        "aksharam": "రా",
+        "count": 720,
+        "percentage": 7.2
+      },
+      {
+        "aksharam": "తి",
+        "count": 680,
+        "percentage": 6.8
+      }
+    ],
+    "consonantVowelCombinations": [
+      {
+        "combination": "కా",
+        "count": 420,
+        "percentage": 4.2
+      },
+      {
+        "combination": "మా",
+        "count": 380,
+        "percentage": 3.8
+      },
+      {
+        "combination": "రీ",
+        "count": 350,
+        "percentage": 3.5
+      },
+      {
+        "combination": "తు",
+        "count": 320,
+        "percentage": 3.2
+      },
+      {
+        "combination": "లో",
+        "count": 300,
+        "percentage": 3.0
+      }
+    ],
+    "totalUniqueSyllables": 1842
+  },
+  "gunintam": {
+    "all": [
+      {
+        "gunintam": "ా",
+        "count": 2100,
+        "percentage": 21.0
+      },
+      {
+        "gunintam": "ి",
+        "count": 1800,
+        "percentage": 18.0
+      },
+      {
+        "gunintam": "ు",
+        "count": 1500,
+        "percentage": 15.0
+      },
+      {
+        "gunintam": "ే",
+        "count": 900,
+        "percentage": 9.0
+      },
+      {
+        "gunintam": "ో",
+        "count": 800,
+        "percentage": 8.0
+      }
+    ],
+    "totalUniqueGunintams": 13
+  },
+  "wordBeginnings": {
+    "twoChar": [
+      {
+        "beginning": "ప్ర",
+        "count": 420,
+        "percentage": 4.2,
+        "examples": ["ప్రేమ", "ప్రకృతి", "ప్రపంచం"]
+      },
+      {
+        "beginning": "స్వ",
+        "count": 380,
+        "percentage": 3.8,
+        "examples": ["స్వామి", "స్వతంత్రం", "స్వర్గం"]
+      },
+      {
+        "beginning": "అను",
+        "count": 350,
+        "percentage": 3.5,
+        "examples": ["అనువాదం", "అనుభవం", "అనుకూలం"]
+      }
+    ]
+  },
+  "wordEndings": {
+    "twoChar": [
+      {
+        "ending": "ము",
+        "count": 1200,
+        "percentage": 12.0,
+        "examples": ["పుస్తకము", "గృహము", "ఆలయము"]
+      },
+      {
+        "ending": "డు",
+        "count": 800,
+        "percentage": 8.0,
+        "examples": ["మనిషుడు", "పిల్లవాడు", "అబ్బాయిడు"]
+      },
+      {
+        "ending": "తి",
+        "count": 600,
+        "percentage": 6.0,
+        "examples": ["ప్రకృతి", "శక్తి", "భక్తి"]
+      }
+    ]
+  },
+  "patterns": {
+    "withMatras": 9200,
+    "withoutMatras": 800,
+    "withHalanta": 3500,
+    "percentages": {
+      "withMatras": 92.0,
+      "withoutMatras": 8.0,
+      "withHalanta": 35.0
+    }
+  },
+  "interestingWords": {
+    "longest": [
+      {
+        "word": "ప్రకృతివైపరీత్యం",
+        "length": 15
+      },
+      {
+        "word": "సంస్కృతభాష",
+        "length": 12
+      }
+    ],
+    "mostUniqueChars": [
+      {
+        "word": "ప్రకృతివైపరీత్యం",
+        "uniqueChars": 12,
+        "length": 15
+      }
+    ],
+    "palindromes": [
+      "అమ్మ",
+      "తత్",
+      "కవక"
+    ]
+  }
+}

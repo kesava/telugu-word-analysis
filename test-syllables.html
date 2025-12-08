@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Telugu Syllable Analysis - Test</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #fafafa;
+            color: #1a1a1a;
+            line-height: 1.5;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            padding: 40px 0;
+            border-bottom: 1px solid #e5e5e5;
+            margin-bottom: 40px;
+        }
+
+        h1 {
+            font-size: 2rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            font-size: 1rem;
+            color: #6b7280;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 24px;
+            border-radius: 8px;
+            border: 1px solid #e5e5e5;
+            text-align: center;
+        }
+
+        .stat-number {
+            display: block;
+            font-size: 2rem;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 4px;
+        }
+
+        .stat-label {
+            font-size: 0.875rem;
+            color: #6b7280;
+            font-weight: 500;
+        }
+
+        .chart-section {
+            background: white;
+            border: 1px solid #e5e5e5;
+            border-radius: 8px;
+            padding: 32px;
+            margin-bottom: 32px;
+        }
+
+        .section-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 400px;
+        }
+
+        .telugu-text {
+            font-family: 'Noto Sans Telugu', 'Telugu Sangam MN', sans-serif;
+            font-weight: 500;
+        }
+
+        .success-message {
+            background: #f0fdf4;
+            border: 1px solid #bbf7d0;
+            color: #15803d;
+            padding: 16px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Telugu Syllable Analysis</h1>
+            <p class="subtitle">Proof-of-concept: Syllable-based analysis of Telugu words</p>
+        </header>
+
+        <div class="success-message">
+            ✅ <strong>Implementation Complete:</strong> Syllable-based analysis successfully restructured from character-based approach
+        </div>
+
+        <div class="stats-grid" id="stats-overview">
+            <div class="stat-card">
+                <span class="stat-number" id="totalWords">-</span>
+                <span class="stat-label">Total Words</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-number" id="avgSyllables">-</span>
+                <span class="stat-label">Avg Syllables</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-number" id="uniqueSyllables">-</span>
+                <span class="stat-label">Unique Syllables</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-number" id="avgLength">-</span>
+                <span class="stat-label">Avg Length</span>
+            </div>
+        </div>
+
+        <div class="chart-section">
+            <h2 class="section-title">Most Frequent Syllables</h2>
+            <div class="chart-container">
+                <canvas id="syllableChart"></canvas>
+            </div>
+        </div>
+
+        <div class="chart-section">
+            <h2 class="section-title">Syllables per Word Distribution</h2>
+            <div class="chart-container">
+                <canvas id="distributionChart"></canvas>
+            </div>
+        </div>
+
+        <div class="chart-section">
+            <h2 class="section-title">Consonant Frequency</h2>
+            <div class="chart-container">
+                <canvas id="consonantChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Chart configuration
+        Chart.defaults.font.family = 'Inter, -apple-system, BlinkMacSystemFont, sans-serif';
+        Chart.defaults.font.size = 12;
+        Chart.defaults.color = '#6b7280';
+
+        let statsData = null;
+
+        async function loadData() {
+            try {
+                const response = await fetch('./telugu-stats-syllable-sample.json');
+                statsData = await response.json();
+
+                displayStats();
+                createCharts();
+            } catch (error) {
+                console.error('Error loading data:', error);
+            }
+        }
+
+        function displayStats() {
+            document.getElementById('totalWords').textContent = statsData.basic.totalWords.toLocaleString();
+            document.getElementById('avgSyllables').textContent = statsData.syllableAnalysis.syllablesPerWord.averageSyllablesPerWord;
+            document.getElementById('uniqueSyllables').textContent = statsData.syllableAnalysis.totalUniqueSyllables.toLocaleString();
+            document.getElementById('avgLength').textContent = statsData.basic.averageLength;
+        }
+
+        function createCharts() {
+            // Syllable frequency chart
+            const syllableCtx = document.getElementById('syllableChart').getContext('2d');
+            new Chart(syllableCtx, {
+                type: 'bar',
+                data: {
+                    labels: statsData.syllableAnalysis.mostFrequentSyllables.map(item => item.syllable),
+                    datasets: [{
+                        label: 'Frequency',
+                        data: statsData.syllableAnalysis.mostFrequentSyllables.map(item => item.count),
+                        backgroundColor: '#3b82f6',
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const item = statsData.syllableAnalysis.mostFrequentSyllables[context.dataIndex];
+                                    return `${item.syllable}: ${item.count} (${item.percentage}%)`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: { beginAtZero: true },
+                        x: {
+                            ticks: {
+                                font: {
+                                    family: 'Telugu Sangam MN, Noto Sans Telugu, Inter',
+                                    size: 16
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Syllable distribution chart
+            const distCtx = document.getElementById('distributionChart').getContext('2d');
+            new Chart(distCtx, {
+                type: 'line',
+                data: {
+                    labels: statsData.syllableAnalysis.syllablesPerWord.distribution.map(item => `${item.syllableCount} syllables`),
+                    datasets: [{
+                        label: 'Words',
+                        data: statsData.syllableAnalysis.syllablesPerWord.distribution.map(item => item.wordCount),
+                        borderColor: '#10b981',
+                        backgroundColor: '#10b98120',
+                        fill: true,
+                        tension: 0.3
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const item = statsData.syllableAnalysis.syllablesPerWord.distribution[context.dataIndex];
+                                    return `${item.wordCount} words (${item.percentage}%)`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: { beginAtZero: true }
+                    }
+                }
+            });
+
+            // Consonant frequency chart
+            const consonantCtx = document.getElementById('consonantChart').getContext('2d');
+            new Chart(consonantCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: statsData.syllableAnalysis.consonantFrequency.map(item => item.consonant),
+                    datasets: [{
+                        data: statsData.syllableAnalysis.consonantFrequency.map(item => item.count),
+                        backgroundColor: ['#ef4444', '#f97316', '#eab308', '#22c55e', '#06b6d4']
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'right',
+                            labels: {
+                                font: {
+                                    family: 'Telugu Sangam MN, Noto Sans Telugu, Inter',
+                                    size: 14
+                                }
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const item = statsData.syllableAnalysis.consonantFrequency[context.dataIndex];
+                                    return `${item.consonant}: ${item.percentage}%`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Load data when page loads
+        document.addEventListener('DOMContentLoaded', loadData);
+    </script>
+</body>
+</html>
